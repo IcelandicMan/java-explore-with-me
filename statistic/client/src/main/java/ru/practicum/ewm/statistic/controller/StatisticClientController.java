@@ -14,8 +14,6 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.practicum.ewm.statistic.dto.Constants.DATE_TIME_FORMAT;
-
 @Slf4j
 @Validated
 @RestController
