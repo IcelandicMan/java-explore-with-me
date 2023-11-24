@@ -1,6 +1,5 @@
 package ru.practicum.ewm.statistic.server.controller;
 
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,7 +20,6 @@ import static ru.practicum.ewm.statistic.dto.Constants.DATE_TIME_FORMAT;
 public class StatisticController {
 
     private final StatisticService statisticService;
-
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)

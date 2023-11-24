@@ -20,7 +20,7 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public void createHit(RequestHitDto requestHitDto) {
-        repository.save(HitMapper.RequestHitDtoToHitEntity(requestHitDto));
+        repository.save(HitMapper.requestHitDtoToHitEntity(requestHitDto));
     }
 
     @Override
