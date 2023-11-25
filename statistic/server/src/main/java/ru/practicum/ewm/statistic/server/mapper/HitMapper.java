@@ -1,7 +1,11 @@
 package ru.practicum.ewm.statistic.server.mapper;
 
+import ru.practicum.ewm.statistic.dto.RequestHitDto;
 import ru.practicum.ewm.statistic.server.model.HitEntity;
-import ru.practicum.ewm.statistic.dto.*;
+
+import java.time.LocalDateTime;
+
+import static ru.practicum.ewm.statistic.dto.Constants.DATE_TIME_FORMATTER;
 
 public class HitMapper {
 
@@ -10,7 +14,8 @@ public class HitMapper {
                 .app(requestHitDto.getApp())
                 .uri(requestHitDto.getUri())
                 .ip(requestHitDto.getIp())
-                .timestamp(requestHitDto.getTimestamp())
+                .timestamp(LocalDateTime.parse(requestHitDto.getTimestamp(),
+                        DATE_TIME_FORMATTER))
                 .build();
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.ewm.statistic.controller.StatisticClientController;
 import ru.practicum.ewm.statistic.exeption.InvalidTimeRangeException;
 
-
 import java.util.List;
 
 @Slf4j

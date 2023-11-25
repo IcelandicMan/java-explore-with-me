@@ -3,8 +3,9 @@ package ru.practicum.ewm.statistic.dto;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Data
 @Builder
@@ -23,7 +24,6 @@ public class RequestHitDto {
     private String ip;
 
     @NotNull
-    @PastOrPresent(message = "Дата не может быть в будущем")
-    private LocalDateTime timestamp;
+    private String timestamp;
 }
 

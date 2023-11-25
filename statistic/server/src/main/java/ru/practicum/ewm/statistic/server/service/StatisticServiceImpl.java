@@ -1,8 +1,9 @@
 package ru.practicum.ewm.statistic.server.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.statistic.dto.RequestHitDto;
 import ru.practicum.ewm.statistic.dto.ResponseHitDto;
 import ru.practicum.ewm.statistic.server.mapper.HitMapper;
@@ -13,11 +14,13 @@ import java.util.List;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class StatisticServiceImpl implements StatisticService {
 
     private final StatisticRepository repository;
 
+    @Transactional
     @Override
     public void createHit(RequestHitDto requestHitDto) {
         repository.save(HitMapper.requestHitDtoToHitEntity(requestHitDto));

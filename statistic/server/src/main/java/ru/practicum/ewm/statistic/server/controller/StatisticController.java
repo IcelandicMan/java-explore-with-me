@@ -1,6 +1,6 @@
 package ru.practicum.ewm.statistic.server.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ import static ru.practicum.ewm.statistic.dto.Constants.DATE_TIME_FORMAT;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class StatisticController {
 
     private final StatisticService statisticService;
@@ -24,7 +24,7 @@ public class StatisticController {
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
     public void createHit(@RequestBody RequestHitDto hitDto) {
-        log.info("Создание записи статистики: " + hitDto.toString());
+        log.info("Создание записи статистики");
         statisticService.createHit(hitDto);
     }
 
