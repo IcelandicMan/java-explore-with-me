@@ -1,24 +1,36 @@
 version: '3.1'
 services:
-  stats-service:
+
+  statistic-client:
+    build: statistic/client
+    image: statistic-client_image
+    container_name: statistic-client_container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - statistic-server
+    environment:
+      - STAT_SERVER_ADDRESS=http://statistic-server:9090
+
+  statistic-server:
     build: statistic/server
-    image: stats-service
-    container_name: stats-service
+    image: statistic-server_image
+    container_name: statistic-server_container
     ports:
       - "9090:9090"
     depends_on:
-      - stats-db
+      - statistic-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://statistic-db:5432/postgres
       - DB_NAME=postgres
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=1234
       - DB_HOST=db
       - DB_PORT=6541
 
-  stats-db:
+  statistic-db:
     image: postgres:14.3-alpine
-    container_name: stats-db
+    container_name: statistic-db_container
     ports:
       - "6541:5432"
     environment:
@@ -27,14 +39,3 @@ services:
       - POSTGRES_PASSWORD=1234
       - TZ=Europe/Moscow
 
-  statistics-client:
-    build: statistic/client
-    image: statistic-client
-    container_name: statistic-client_container
-    ports:
-      - "8080:8080"
-    depends_on:
-      [ stats-service ]
-    environment:
-      - STAT_CLIENT_PORT=8080
-      - STAT_SERVER_ADDRESS=http://statistics-server:9090
