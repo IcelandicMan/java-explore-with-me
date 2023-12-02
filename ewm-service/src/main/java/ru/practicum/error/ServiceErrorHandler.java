@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.exception.*;
-import ru.practicum.сontroller.AdminController;
-import ru.practicum.сontroller.PrivateController;
-import ru.practicum.сontroller.PublicController;
+import ru.practicum.controller.AdminController;
+import ru.practicum.controller.PrivateController;
+import ru.practicum.controller.PublicController;
 
 import java.util.List;
 

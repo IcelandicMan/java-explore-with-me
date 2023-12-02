@@ -1,4 +1,4 @@
-package ru.practicum.сontroller;
+package ru.practicum.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,6 @@ public class PublicController {
     private final CategoryService categoryService;
     private final EventService eventService;
     private final CompilationService compilationService;
-
 
     @GetMapping("/categories")
     @ResponseStatus(value = HttpStatus.OK)
