@@ -10,41 +10,21 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<name>Explore With Me</name>
-    <modules>
-        <module>statistic</module>
-		<module>ewn-service</module>
-	</modules>
-
-    <groupId>ru.practicum</groupId>
+	<groupId>ru.practicum</groupId>
 	<artifactId>explore-with-me</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
+
+	<name>explore with me</name>
+    <modules>
+		<module>ewm-service</module>
+		<module>ewm-statistic</module>
+	</modules>
 
 	<properties>
 		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.jetbrains</groupId>
-				<artifactId>annotations</artifactId>
-				<version>24.0.1</version>
-			</dependency>
-			<dependency>
-				<groupId>com.mageddo.lombok</groupId>
-				<artifactId>lombok-ext</artifactId>
-				<version>2.4.4</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-lang</groupId>
-				<artifactId>commons-lang</artifactId>
-				<version>2.6</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<build>
 		<pluginManagement>
@@ -126,32 +106,32 @@
 										<limits>
 											<limit>
 												<counter>INSTRUCTION</counter>
-												<value>COVEREDRATIO</value>
+												<value>COVERED-RATIO</value>
 												<minimum>0.01</minimum>
 											</limit>
 											<limit>
 												<counter>LINE</counter>
-												<value>COVEREDRATIO</value>
+												<value>COVERED-RATIO</value>
 												<minimum>0.2</minimum>
 											</limit>
 											<limit>
 												<counter>BRANCH</counter>
-												<value>COVEREDRATIO</value>
+												<value>COVERED-RATIO</value>
 												<minimum>0.2</minimum>
 											</limit>
 											<limit>
 												<counter>COMPLEXITY</counter>
-												<value>COVEREDRATIO</value>
+												<value>COVERED-RATIO</value>
 												<minimum>0.2</minimum>
 											</limit>
 											<limit>
 												<counter>METHOD</counter>
-												<value>COVEREDRATIO</value>
+												<value>COVERED-RATIO</value>
 												<minimum>0.2</minimum>
 											</limit>
 											<limit>
 												<counter>CLASS</counter>
-												<value>MISSEDCOUNT</value>
+												<value>MISSED-COUNT</value>
 												<maximum>1</maximum>
 											</limit>
 										</limits>

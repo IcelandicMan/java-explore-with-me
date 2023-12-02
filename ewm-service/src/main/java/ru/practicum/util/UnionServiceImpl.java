@@ -1,0 +1,84 @@
+package ru.practicum.util;
+
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import ru.practicum.exception.*;
+import ru.practicum.model.*;
+import ru.practicum.repository.*;
+
+import java.util.Optional;
+
+@Service
+@AllArgsConstructor
+public class UnionServiceImpl implements UnionService {
+
+    private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final EventRepository eventRepository;
+    private final RequestRepository requestRepository;
+    private final CompilationRepository compilationRepository;
+
+    @Override
+    public User getUserOrNotFound(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException(String.format("Пользователь c id %s не найден", userId));
+        } else {
+            return user.get();
+        }
+    }
+
+    @Override
+    public Category getCategoryOrNotFound(Long categoryId) {
+
+        Optional<Category> category = categoryRepository.findById(categoryId);
+
+        if (category.isEmpty()) {
+            throw new CategoryNotFoundException(String.format("Категория c id %s не найден", categoryId));
+        } else {
+            return category.get();
+        }
+    }
+
+    @Override
+    public Event getEventOrNotFound(Long eventId) {
+        Optional<Event> event = eventRepository.findById(eventId);
+        if (event.isEmpty()) {
+            throw new EventNotFoundException(String.format("Событие c id %s не найдено", eventId));
+        } else {
+            return event.get();
+        }
+    }
+
+    @Override
+    public Boolean userIsEventCreator(User user, Event event) {
+        if (!event.getInitiator().getId().equals(user.getId())) {
+            throw new UserNotOwnerException(String.format("Пользователь c id %s не является создателем события с id %s",
+                    event.getId(), user.getId()));
+        }
+        return true;
+    }
+
+    @Override
+    public Request getRequestOrNotFound(Long requestId) {
+        Optional<Request> request = requestRepository.findById(requestId);
+
+        if (request.isEmpty()) {
+            throw new RequestNotOwnerException(String.format("Заявка на участие c id %s не найдено", requestId));
+        } else {
+            return request.get();
+        }
+    }
+
+    @Override
+    public Compilation getCompilationOrNotFound(Long compId) {
+        Optional<Compilation> compilation = compilationRepository.findById(compId);
+
+        if (compilation.isEmpty()) {
+            throw new CompilationNotFoundException(String.format("Подборка событий с id %s не найдена", compId));
+        } else {
+            return compilation.get();
+        }
+    }
+
+}
