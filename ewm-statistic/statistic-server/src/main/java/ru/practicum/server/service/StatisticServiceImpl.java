@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.RequestHitDto;
 import ru.practicum.dto.ResponseHitDto;
+import ru.practicum.server.exeprion.InvalidTimeRangeException;
 import ru.practicum.server.mapper.HitMapper;
 import ru.practicum.server.model.HitEntity;
 import ru.practicum.server.repository.StatisticRepository;
@@ -27,6 +28,9 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public List<ResponseHitDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
+        if (start.isAfter(end)) {
+            throw new InvalidTimeRangeException("Время начала не может быть позднее время окончания");
+        }
         if (uris == null || uris.isEmpty()) {
             if (unique) {
                 log.info("Запрос всей статистики c уникальными пользователями");
