@@ -8,15 +8,20 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.exception.*;
-import ru.practicum.controller.AdminController;
-import ru.practicum.controller.PrivateController;
-import ru.practicum.controller.PublicController;
+import ru.practicum.category.exception.CategoryNotFoundException;
+import ru.practicum.compilation.exception.CompilationNotFoundException;
+import ru.practicum.event.exception.EventNotFoundException;
+import ru.practicum.event.exception.EventStateException;
+import ru.practicum.request.exception.RequestNotOwnerException;
+import ru.practicum.user.exception.UserNotFoundException;
+import ru.practicum.user.exception.UserNotOwnerException;
+import ru.practicum.util.exception.ConflictException;
+import ru.practicum.util.exception.ValidationException;
 
 import java.util.List;
 
 @Slf4j
-@RestControllerAdvice(assignableTypes = {PublicController.class, PrivateController.class, AdminController.class})
+@RestControllerAdvice(basePackages = "ru.practicum")
 public class ServiceErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
