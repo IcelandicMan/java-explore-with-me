@@ -112,9 +112,6 @@ public class EventServiceImpl implements EventService {
         });
 
         baseUpdateEvent(event, updatedEvent);
-        if (updatedEvent.getPaid() != null && !updatedEvent.getPaid().equals(false)) {
-            event.setPaid(updatedEvent.getPaid());
-        }
         return EventMapper.eventToEventResponseFullDto(eventRepository.save(event));
     }
 
@@ -174,11 +171,6 @@ public class EventServiceImpl implements EventService {
         }
 
         Event eventUpdated = baseUpdateEvent(event, updatedEvent);
-
-        if (updatedEvent.getPaid() != null) {
-            event.setPaid(updatedEvent.getPaid());
-        }
-
         return EventMapper.eventToEventResponseFullDto(eventRepository.save(eventUpdated));
     }
 
@@ -233,11 +225,12 @@ public class EventServiceImpl implements EventService {
     }
 
     private Event baseUpdateEvent(Event event, EventRequestUpdateDto updatedEvent) {
+        final Boolean eventPaid = event.getPaid();
         final String annotation;
-
         final Long categoryId = updatedEvent.getCategory();
         final String description;
         final LocationDto location = updatedEvent.getLocation();
+        final Boolean paid = updatedEvent.getPaid();
         final Long participantLimit = updatedEvent.getParticipantLimit();
         final Boolean requestModeration = updatedEvent.getRequestModeration();
         final StateAction stateAction = updatedEvent.getStateAction();
@@ -253,6 +246,9 @@ public class EventServiceImpl implements EventService {
         if (updatedEvent.getDescription().isPresent()) {
             description = updatedEvent.getDescription().get();
             event.setDescription(description);
+        }
+        if (paid != null) {
+            event.setPaid(paid);
         }
         if (location != null) {
             event.setLocation(LocationMapper.locationDtoToLocation(location));
@@ -270,8 +266,10 @@ public class EventServiceImpl implements EventService {
                 event.setPublishedOn(LocalDateTime.now());
             } else if (stateAction == REJECT_EVENT || stateAction == CANCEL_REVIEW) {
                 event.setState(CANCELED);
+                event.setPaid(eventPaid);
             } else if (stateAction == SEND_TO_REVIEW) {
                 event.setState(PENDING);
+                event.setPaid(eventPaid);
             }
         }
         if (updatedEvent.getTitle().isPresent()) {
