@@ -2,7 +2,6 @@ package ru.practicum.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 import ru.practicum.util.emums.State;
 
 import javax.persistence.*;
@@ -17,66 +16,64 @@ import static ru.practicum.util.Util.DATE_FORMAT;
 @NoArgsConstructor
 @Entity
 @Table(name = "events", schema = "public")
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    Long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "initiator_id", nullable = false)
-    User initiator;
+    private User initiator;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
-    Category category;
+    private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
-    Location location;
+    private Location location;
 
     @Column(name = "title")
-    String title;
+    private String title;
 
     @Size(min = 20, max = 2000)
     @Column(name = "annotation")
-    String annotation;
+    private String annotation;
 
     @Column(name = "event_date")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
-    LocalDateTime eventDate;
+    private LocalDateTime eventDate;
 
     @Column(name = "paid")
-    Boolean paid;
+    private Boolean paid;
 
     @Size(min = 20, max = 7000)
     @Column(name = "description")
-    String description;
+    private String description;
 
     @JoinColumn(name = "confirmed_requests")
-    Long confirmedRequests;
+    private Long confirmedRequests;
 
     @Column(name = "participant_limit")
-    Long participantLimit;
+    private Long participantLimit;
 
     @Column(name = "request_moderation")
-    Boolean requestModeration;
+    private Boolean requestModeration;
 
     @Column(name = "published_on")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
-    LocalDateTime publishedOn;
+    private LocalDateTime publishedOn;
 
     @Column(name = "created_on")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
-    LocalDateTime createdOn;
+    private LocalDateTime createdOn;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
-    State state;
+    private State state;
 
     @Column(name = "views")
-    Long views;
+    private Long views;
 }

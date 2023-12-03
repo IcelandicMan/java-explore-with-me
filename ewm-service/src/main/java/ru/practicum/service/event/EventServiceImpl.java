@@ -112,6 +112,9 @@ public class EventServiceImpl implements EventService {
         });
 
         baseUpdateEvent(event, updatedEvent);
+        if (updatedEvent.getPaid() != null && !updatedEvent.getPaid().equals(false)) {
+            event.setPaid(updatedEvent.getPaid());
+        }
         return EventMapper.eventToEventResponseFullDto(eventRepository.save(event));
     }
 
@@ -145,20 +148,21 @@ public class EventServiceImpl implements EventService {
 
         Event event = unionService.getEventOrNotFound(eventId);
 
-        updatedEvent.getEventDate().ifPresent(date -> {
-            if (date.isAfter(LocalDateTime.now().plusHours(1)) || date.isEqual(LocalDateTime.now().plusHours(1))) {
-                event.setEventDate(date);
-            } else {
-                throw new ValidationException("Дата начала изменяемого события должна быть не ранее чем за час от даты публикации");
-            }
-        });
-
         if (updatedEvent.getStateAction() != null) {
             if (updatedEvent.getStateAction().equals(PUBLISH_EVENT)) {
                 if (!event.getState().equals(PENDING)) {
                     throw new EventStateException(String.format("Событие по id: %s уже опубликовано", event.getTitle()));
                 }
                 event.setPublishedOn(LocalDateTime.now());
+
+                if (updatedEvent.getEventDate().isPresent()) {
+                    if (updatedEvent.getEventDate().get().isAfter(event.getPublishedOn().plusHours(1)) ||
+                            updatedEvent.getEventDate().get().isEqual(event.getPublishedOn().plusHours(1))) {
+                        event.setEventDate(updatedEvent.getEventDate().get());
+                    } else {
+                        throw new ValidationException("Дата начала изменяемого события должна быть не ранее чем за час от даты публикации");
+                    }
+                }
                 event.setState(PUBLISHED);
             } else {
                 if (!event.getState().equals(PENDING)) {
@@ -170,6 +174,11 @@ public class EventServiceImpl implements EventService {
         }
 
         Event eventUpdated = baseUpdateEvent(event, updatedEvent);
+
+        if (updatedEvent.getPaid() != null) {
+            event.setPaid(updatedEvent.getPaid());
+        }
+
         return EventMapper.eventToEventResponseFullDto(eventRepository.save(eventUpdated));
     }
 
@@ -197,7 +206,6 @@ public class EventServiceImpl implements EventService {
                 .map(EventMapper::eventToEventResponseShortDto)
                 .collect(Collectors.toList());
     }
-
 
     private void sendInfo(String uri, String ip) {
         RequestHitDto hitDto = RequestHitDto.builder()
@@ -230,7 +238,6 @@ public class EventServiceImpl implements EventService {
         final Long categoryId = updatedEvent.getCategory();
         final String description;
         final LocationDto location = updatedEvent.getLocation();
-        final Boolean paid = updatedEvent.getPaid();
         final Long participantLimit = updatedEvent.getParticipantLimit();
         final Boolean requestModeration = updatedEvent.getRequestModeration();
         final StateAction stateAction = updatedEvent.getStateAction();
@@ -250,9 +257,6 @@ public class EventServiceImpl implements EventService {
         if (location != null) {
             event.setLocation(LocationMapper.locationDtoToLocation(location));
             locationRepository.save(event.getLocation());
-        }
-        if (paid != null && !paid.equals(false)) {
-            event.setPaid(paid);
         }
         if (participantLimit != null && participantLimit != 0) {
             event.setParticipantLimit(participantLimit);
