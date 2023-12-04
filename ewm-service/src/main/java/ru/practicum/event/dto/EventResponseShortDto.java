@@ -1,8 +1,10 @@
 package ru.practicum.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.category.dto.CategoryResponseDto;
 import ru.practicum.user.dto.UserResponseShortDto;
 
@@ -14,14 +16,13 @@ import static ru.practicum.util.Util.DATE_FORMAT;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventResponseShortDto {
 
     private String annotation;
 
     private CategoryResponseDto category;
 
-    Long confirmedRequests;
+    private Long confirmedRequests;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_FORMAT)
     private LocalDateTime eventDate;

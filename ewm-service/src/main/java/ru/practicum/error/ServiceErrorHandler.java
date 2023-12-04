@@ -8,11 +8,20 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.category.controller.CategoryAdminController;
+import ru.practicum.category.controller.CategoryPublicController;
 import ru.practicum.category.exception.CategoryNotFoundException;
+import ru.practicum.compilation.controller.CompilationAdminController;
+import ru.practicum.compilation.controller.CompilationPublicController;
 import ru.practicum.compilation.exception.CompilationNotFoundException;
+import ru.practicum.event.controller.EventAdminController;
+import ru.practicum.event.controller.EventPrivateController;
+import ru.practicum.event.controller.EventPublicController;
 import ru.practicum.event.exception.EventNotFoundException;
 import ru.practicum.event.exception.EventStateException;
+import ru.practicum.request.controller.RequestPrivateController;
 import ru.practicum.request.exception.RequestNotOwnerException;
+import ru.practicum.user.controller.UserAdminController;
 import ru.practicum.user.exception.UserNotFoundException;
 import ru.practicum.user.exception.UserNotOwnerException;
 import ru.practicum.util.exception.ConflictException;
@@ -21,7 +30,10 @@ import ru.practicum.util.exception.ValidationException;
 import java.util.List;
 
 @Slf4j
-@RestControllerAdvice(basePackages = "ru.practicum")
+@RestControllerAdvice(assignableTypes = {CategoryAdminController.class, CategoryPublicController.class,
+        CompilationAdminController.class, CompilationPublicController.class,
+        EventAdminController.class, EventPrivateController.class, EventPublicController.class,
+        RequestPrivateController.class, UserAdminController.class})
 public class ServiceErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -71,7 +83,6 @@ public class ServiceErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
-
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleCompilationNotFoundException(final CompilationNotFoundException e) {
@@ -101,5 +112,4 @@ public class ServiceErrorHandler {
     public ErrorResponse handleEmailExistException(final ConstraintViolationException e) {
         return new ErrorResponse(e.getMessage());
     }
-
 }

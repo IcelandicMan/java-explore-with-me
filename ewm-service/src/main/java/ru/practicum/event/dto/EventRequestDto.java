@@ -1,8 +1,10 @@
 package ru.practicum.event.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.location.dto.LocationDto;
 
 import javax.validation.constraints.*;
@@ -14,7 +16,6 @@ import static ru.practicum.util.Util.DATE_FORMAT;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventRequestDto {
 
     @NotBlank(message = "annotation не может быть пустой или состоять из одних лишь пробелов")

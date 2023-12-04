@@ -1,4 +1,4 @@
-package ru.practicum.util;
+package ru.practicum.util.deserializer;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
