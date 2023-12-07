@@ -37,7 +37,7 @@ public class EventRequestUpdateDto {
 
     private LocationDto location;
 
-    private Boolean paid = false;
+    private Boolean paid;
 
     private Long participantLimit;
 

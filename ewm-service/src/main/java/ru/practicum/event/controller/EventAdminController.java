@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.comment.dto.CommentResponseParentDto;
+import ru.practicum.comment.dto.CommentUpdateAdminDto;
+import ru.practicum.comment.service.CommentService;
 import ru.practicum.event.dto.EventRequestUpdateDto;
 import ru.practicum.event.dto.EventResponseFullDto;
 import ru.practicum.event.service.EventService;
@@ -22,6 +25,7 @@ import java.util.List;
 public class EventAdminController {
 
     private final EventService eventService;
+    private final CommentService commentService;
 
     @GetMapping
     @ResponseStatus(value = HttpStatus.OK)
@@ -51,5 +55,23 @@ public class EventAdminController {
         EventResponseFullDto event = eventService.updateEventByAdmin(eventUpdateDto, eventId);
         log.info("Запрос от Админа на обновление события с id {} выполнен, событие обновлено : {} ", eventId, event);
         return event;
+    }
+
+    @PatchMapping("/comments")
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<CommentResponseParentDto> updateCommentsStatusByAdmin(@RequestBody CommentUpdateAdminDto commentUpdateAdminDto) {
+        log.info("Запрос от Admin  обновление статусов комментариев: {} ", commentUpdateAdminDto);
+        List<CommentResponseParentDto> comments = commentService.updateCommentByAdmin(commentUpdateAdminDto);
+        log.info("\"Запрос от Admin  обновление статусов комментариев выполнен,\n" +
+                "комментарии обновлены: {} ", comments);
+        return comments;
+    }
+
+    @DeleteMapping("/comments/{commentId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteCommentByAdmin(@PathVariable("commentId") Long commentId) {
+        log.info("Запрошено удаление комментария с id {} ", commentId);
+        commentService.deleteCommentByAdmin(commentId);
+        log.info("Запрос на удаление комментария id {} выполнен", commentId);
     }
 }

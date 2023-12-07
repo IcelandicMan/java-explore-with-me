@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import ru.practicum.category.mapper.CategoryMapper;
 import ru.practicum.category.model.Category;
+import ru.practicum.comment.dto.CommentsResponseDto;
 import ru.practicum.event.dto.EventRequestDto;
 import ru.practicum.event.dto.EventResponseFullDto;
 import ru.practicum.event.dto.EventResponseShortDto;
@@ -14,6 +15,7 @@ import ru.practicum.user.mapper.UserMapper;
 import ru.practicum.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static ru.practicum.util.emum.State.PENDING;
 
@@ -36,10 +38,11 @@ public class EventMapper {
                 .state(PENDING)
                 .title(eventRequestDto.getTitle())
                 .views(0L)
+                .paid(eventRequestDto.getPaid() != null ? eventRequestDto.getPaid() : false)
                 .build();
     }
 
-    public static EventResponseFullDto eventToEventResponseFullDto(Event event) {
+    public static EventResponseFullDto eventToEventResponseFullDto(Event event, List<? extends CommentsResponseDto> commentsResponseDto) {
         return EventResponseFullDto.builder()
                 .annotation(event.getAnnotation())
                 .category(CategoryMapper.categoryToCategoryResponseDto(event.getCategory()))
@@ -57,6 +60,7 @@ public class EventMapper {
                 .state(event.getState())
                 .title(event.getTitle())
                 .views(event.getViews())
+                .comments(commentsResponseDto)
                 .build();
     }
 

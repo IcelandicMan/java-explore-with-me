@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.comment.dto.CommentRequestDto;
+import ru.practicum.comment.dto.CommentResponseParentDto;
+import ru.practicum.comment.service.CommentService;
 import ru.practicum.event.dto.EventRequestDto;
 import ru.practicum.event.dto.EventRequestUpdateDto;
 import ru.practicum.event.dto.EventResponseFullDto;
@@ -27,6 +30,7 @@ public class EventPrivateController {
 
     private final EventService eventService;
     private final RequestService requestService;
+    private final CommentService commentService;
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -56,7 +60,7 @@ public class EventPrivateController {
                                                   @PathVariable Long eventId) {
         log.info("Запрошено событие с id {} от пользователя с id {}", eventId, userId);
         EventResponseFullDto event = eventService.getEventByCreator(userId, eventId);
-        log.info("Запрос на предоставление данные по событию с id {} выполнен: ", event);
+        log.info("Запрос на предоставление данных по событию с id {} выполнен: ", event);
         return event;
     }
 
@@ -94,5 +98,39 @@ public class EventPrivateController {
         log.info("Запрос на изменения статуса заявки для события под id: {}, пользователем под id {} \n " +
                 "Выполнен: {} ", eventId, userId, requestUpdateDtoResult);
         return requestUpdateDtoResult;
+    }
+
+    @PostMapping("/{eventId}/comments")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public CommentResponseParentDto createComment(@PathVariable Long userId,
+                                                  @PathVariable Long eventId,
+                                                  @RequestBody CommentRequestDto commentRequestDto) {
+        log.info("Запрос от пользователя с id: {} на создание комментария для события под id: {} \n{}",
+                userId, eventId, commentRequestDto);
+        CommentResponseParentDto comment = commentService.createComment(userId, eventId, commentRequestDto);
+        log.info("Запрос от пользователя с id: {} на создание комментария для события под id:{} \nсоздан: {}",
+                userId, eventId, comment);
+        return comment;
+    }
+
+    @DeleteMapping("/{eventId}/comments/{commentId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteCommentByOwner(@PathVariable("userId") Long userId,
+                                     @PathVariable("commentId") Long commentId) {
+        log.info("Запрошено удаление комментария с id {} ", commentId);
+        commentService.deleteCommentByOwner(commentId, userId);
+        log.info("Запрос на удаление комментария id {} выполнен", commentId);
+    }
+
+    @PatchMapping("/{eventId}/comments/{commentId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public CommentResponseParentDto updateCommentByOwner(@Valid @RequestBody CommentRequestDto commentRequestDto,
+                                                         @PathVariable Long userId,
+                                                         @PathVariable Long commentId) {
+        log.info("Запрос от пользователя с id {} на обновление комментария с id {}: {} ", userId, commentId, commentRequestDto);
+        CommentResponseParentDto comment = commentService.updateCommentByOwner(commentId, userId, commentRequestDto);
+        log.info("Запрос от пользователя с id {} на обновление комментария с id {} выполнено,\n" +
+                "событие обновлено : {} ", userId, commentId, comment);
+        return comment;
     }
 }

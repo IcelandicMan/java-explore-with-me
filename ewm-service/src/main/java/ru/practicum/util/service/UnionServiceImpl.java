@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 import ru.practicum.category.exception.CategoryNotFoundException;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
+import ru.practicum.comment.exeption.CommentNotFoundException;
+import ru.practicum.comment.model.Comment;
+import ru.practicum.comment.repository.CommentRepository;
 import ru.practicum.compilation.exception.CompilationNotFoundException;
 import ru.practicum.compilation.model.Compilation;
 import ru.practicum.compilation.repository.CompilationRepository;
@@ -30,6 +33,7 @@ public class UnionServiceImpl implements UnionService {
     private final EventRepository eventRepository;
     private final RequestRepository requestRepository;
     private final CompilationRepository compilationRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public User getUserOrNotFound(Long userId) {
@@ -92,6 +96,25 @@ public class UnionServiceImpl implements UnionService {
         } else {
             return compilation.get();
         }
+    }
+
+    @Override
+    public Comment getCommentOrNotFound(Long commentId) {
+        Optional<Comment> comment = commentRepository.findById(commentId);
+        if (comment.isEmpty()) {
+            throw new CommentNotFoundException(String.format("Комментарий с id %s не найдена", comment));
+        } else {
+            return comment.get();
+        }
+    }
+
+    @Override
+    public Boolean userIsCommentCreator(User user, Comment comment) {
+        if (!comment.getAuthor().getId().equals(user.getId())) {
+            throw new UserNotOwnerException(String.format("Пользователь c id %s не является создателем комментария с id %s",
+                    comment.getId(), user.getId()));
+        }
+        return true;
     }
 
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.category.controller.CategoryAdminController;
 import ru.practicum.category.controller.CategoryPublicController;
 import ru.practicum.category.exception.CategoryNotFoundException;
+import ru.practicum.comment.exeption.CommentNotFoundException;
 import ru.practicum.compilation.controller.CompilationAdminController;
 import ru.practicum.compilation.controller.CompilationPublicController;
 import ru.practicum.compilation.exception.CompilationNotFoundException;
@@ -86,6 +87,12 @@ public class ServiceErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleCompilationNotFoundException(final CompilationNotFoundException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleCommentNotFoundException(final CommentNotFoundException e) {
         return new ErrorResponse(e.getMessage());
     }
 

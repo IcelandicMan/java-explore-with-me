@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.comment.service.CommentService;
 import ru.practicum.event.dto.EventResponseFullDto;
 import ru.practicum.event.dto.EventResponseShortDto;
 import ru.practicum.event.service.EventService;
@@ -22,6 +23,7 @@ import java.util.List;
 public class EventPublicController {
 
     private final EventService eventService;
+    private final CommentService commentService;
 
     @GetMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)

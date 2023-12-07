@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.practicum.category.model.Category;
 import ru.practicum.client.StatisticClient;
+import ru.practicum.comment.dto.CommentResponseParentDto;
+import ru.practicum.comment.service.CommentServiceImpl;
 import ru.practicum.dto.RequestHitDto;
 import ru.practicum.dto.ResponseHitDto;
 import ru.practicum.event.dto.EventRequestDto;
@@ -32,6 +34,7 @@ import ru.practicum.util.service.UnionService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +54,7 @@ public class EventServiceImpl implements EventService {
     private final LocationRepository locationRepository;
     private final StatisticClient client;
     private final ObjectMapper objectMapper;
+    private final CommentServiceImpl eventCommentsService;
 
     @Override
     public EventResponseFullDto createEvent(Long userId, EventRequestDto event) {
@@ -58,7 +62,7 @@ public class EventServiceImpl implements EventService {
         Category category = unionService.getCategoryOrNotFound(event.getCategory());
         Location location = locationRepository.save(LocationMapper.locationDtoToLocation(event.getLocation()));
         Event createdEvent = EventMapper.eventRequestDtoToEvent(event, user, category, location);
-        return EventMapper.eventToEventResponseFullDto(eventRepository.save(createdEvent));
+        return EventMapper.eventToEventResponseFullDto(eventRepository.save(createdEvent), Collections.emptyList());
     }
 
     @Override
@@ -77,7 +81,10 @@ public class EventServiceImpl implements EventService {
         User user = unionService.getUserOrNotFound(userId);
         Event event = unionService.getEventOrNotFound(eventId);
         unionService.userIsEventCreator(user, event);
-        return EventMapper.eventToEventResponseFullDto(eventRepository.findByInitiatorIdAndId(userId, eventId));
+        List<CommentResponseParentDto> comments = eventCommentsService.getAllCommentsForAdminAndPrivate(eventId);
+
+        return EventMapper.eventToEventResponseFullDto(eventRepository.findByInitiatorIdAndId(userId, eventId),
+                comments);
     }
 
     @Override
@@ -88,7 +95,9 @@ public class EventServiceImpl implements EventService {
         }
         sendInfo(uri, ip);
         event.setViews(getViewsEventById(eventId));
-        return EventMapper.eventToEventResponseFullDto(eventRepository.save(event));
+        List<CommentResponseParentDto> comments = eventCommentsService.getAllCommentsForPublic(eventId);
+
+        return EventMapper.eventToEventResponseFullDto(eventRepository.save(event), comments);
     }
 
 
@@ -111,7 +120,7 @@ public class EventServiceImpl implements EventService {
         });
 
         baseUpdateEvent(event, updatedEvent);
-        return EventMapper.eventToEventResponseFullDto(eventRepository.save(event));
+        return getEventByCreator(userId, eventId);
     }
 
     @Override
@@ -132,11 +141,16 @@ public class EventServiceImpl implements EventService {
         }
 
         PageRequest pageRequest = PageRequest.of(from / size, size);
-        List<Event> eventsList;
-        eventsList = eventRepository.findEventsByAdminFromParam(users, statesValue, categories, startTime, endTime, pageRequest);
-        return eventsList.stream()
-                .map(EventMapper::eventToEventResponseFullDto)
-                .collect(Collectors.toList());
+        List<Event> eventsList = eventRepository.findEventsByAdminFromParam(users, statesValue, categories, startTime, endTime, pageRequest);
+
+        List<EventResponseFullDto> response = new ArrayList<>();
+
+        for (Event event : eventsList) {
+            List<CommentResponseParentDto> comments = eventCommentsService.getAllCommentsForAdminAndPrivate(event.getId());
+            response.add(EventMapper.eventToEventResponseFullDto(event, comments));
+        }
+
+        return response;
     }
 
     @Override
@@ -170,7 +184,8 @@ public class EventServiceImpl implements EventService {
         }
 
         Event eventUpdated = baseUpdateEvent(event, updatedEvent);
-        return EventMapper.eventToEventResponseFullDto(eventRepository.save(eventUpdated));
+        List<CommentResponseParentDto> comments = eventCommentsService.getAllCommentsForAdminAndPrivate(eventId);
+        return EventMapper.eventToEventResponseFullDto(eventRepository.save(eventUpdated), comments);
     }
 
     @Override
