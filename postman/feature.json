@@ -21,6 +21,8 @@
 							"\r",
 							"const source = JSON.parse(pm.request.body.raw);\r",
 							"const target = pm.response.json();\r",
+							"pm.collectionVariables.set(\"user1\", target);\r",
+							"\r",
 							"\r",
 							"pm.test(\"Пользователь должен содержать поля: id, name, email\", function () {\r",
 							"    pm.expect(target).to.have.property('id');\r",
@@ -71,6 +73,7 @@
 							"\r",
 							"const source = JSON.parse(pm.request.body.raw);\r",
 							"const target = pm.response.json();\r",
+							"pm.collectionVariables.set(\"user2\", target);\r",
 							"\r",
 							"pm.test(\"Пользователь должен содержать поля: id, name, email\", function () {\r",
 							"    pm.expect(target).to.have.property('id');\r",
@@ -121,6 +124,7 @@
 							"\r",
 							"const source = JSON.parse(pm.request.body.raw);\r",
 							"const target = pm.response.json();\r",
+							"pm.collectionVariables.set(\"user3\", target);\r",
 							"\r",
 							"pm.test(\"Пользователь должен содержать поля: id, name, email\", function () {\r",
 							"    pm.expect(target).to.have.property('id');\r",
@@ -171,6 +175,7 @@
 							"\r",
 							"const source = JSON.parse(pm.request.body.raw);\r",
 							"const target = pm.response.json();\r",
+							"pm.collectionVariables.set(\"category\", target);\r",
 							"\r",
 							"pm.test(\"Категория должна содержать поля: id, name\", function () {\r",
 							"pm.expect(target).to.have.property('id');\r",
@@ -218,6 +223,7 @@
 							"\r",
 							"const source = JSON.parse(pm.request.body.raw);\r",
 							"const target = pm.response.json();\r",
+							"pm.collectionVariables.set(\"event1\", target);\r",
 							"\r",
 							"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, location, requestModeration\", function () {\r",
 							"pm.expect(target).to.have.property('id');\r",
@@ -278,7 +284,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "{{user1id}}"
+							"value": "{{user1Id}}"
 						}
 					]
 				}
@@ -1070,7 +1076,7 @@
 					"variable": [
 						{
 							"key": "userId",
-							"value": "{{user1id}}"
+							"value": "{{user1Id}}"
 						}
 					]
 				}
@@ -2066,6 +2072,26 @@
 		},
 		{
 			"key": "comment6Id",
+			"value": ""
+		},
+		{
+			"key": "user1",
+			"value": ""
+		},
+		{
+			"key": "user2",
+			"value": ""
+		},
+		{
+			"key": "user3",
+			"value": ""
+		},
+		{
+			"key": "category",
+			"value": ""
+		},
+		{
+			"key": "event1",
 			"value": ""
 		}
 	]
