@@ -6,11 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.category.dto.CategoryResponseDto;
+import ru.practicum.comment.dto.CommentsResponseDto;
 import ru.practicum.location.dto.LocationDto;
 import ru.practicum.user.dto.UserResponseShortDto;
 import ru.practicum.util.emum.State;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static ru.practicum.util.Util.DATE_FORMAT;
 
@@ -55,5 +57,7 @@ public class EventResponseFullDto {
     private String title;
 
     private Long views;
+
+    private List<? extends CommentsResponseDto> comments;
 }
 
